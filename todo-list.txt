@@ -1,0 +1,6 @@
+Project Setup
+Create Player and Enemy (Start with hitboxes and use Sprites to create the visualization of player and arena)
+Move characters with Event Listeners
+Different Attacks
+Health bar interface
+Game Timers and Game Over
