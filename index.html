@@ -1,3 +1,25 @@
-<canvas style="border-radius: 5px;"></canvas>
+<body>
+  <!-- canvas div -->
+  <div style="position: relative">
+    <!-- top "nav kind" div -->
+    <!-- using flex to display divs next to each other rather than the default of block which stacks them on top of each other. did this at the parent level to affect all -->
+    <div style="position: absolute; display: flex; width: 100%">
+      <!-- player health -->
+      <div style="background-color: yellow; height: 30px; width: 100%"></div>
+      <!-- timer -->
+      <div
+        style="
+          background-color: red;
+          height: 100px;
+          width: 100px;
+          flex-shrink: 0;
+        "
+      ></div>
+      <!-- enemy health -->
+      <div style="background-color: yellow; height: 30px; width: 100%"></div>
+    </div>
+    <canvas style="border-radius: 5px"></canvas>
+  </div>
 
-<script src="index.js"></script>
+  <script src="index.js"></script>
+</body>
