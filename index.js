@@ -32,6 +32,7 @@ class Sprite {
     };
     this.color = color;
     this.isAttacking;
+    this.health = 100;
   }
 
   draw() {
@@ -173,6 +174,34 @@ function rectangularCollision({ rectangle1, rectangle2 }) {
   );
 }
 
+function determineWinner({ player, enemy, timerId }) {
+  clearTimeout(timerId);
+  document.querySelector("#displayText").style.display = "flex";
+  if (player.health === enemy.health) {
+    document.querySelector("#displayText").innerHTML = "Tie";
+  } else if (player.health > enemy.health) {
+    document.querySelector("#displayText").innerHTML = "Player 1 Wins!";
+  } else if (player.health < enemy.health) {
+    document.querySelector("#displayText").innerHTML = "Player 2 Wins!";
+  }
+}
+
+let timer = 60;
+let timerId;
+function decreaseTimer() {
+  if (timer > 0) {
+    timerId = setTimeout(decreaseTimer, 1000);
+    timer--;
+    document.querySelector("#timer").innerHTML = timer;
+  }
+
+  if (timer === 0) {
+    determineWinner({ player, enemy });
+  }
+}
+
+decreaseTimer();
+
 function animate() {
   // animation loop over and over
   window.requestAnimationFrame(animate);
@@ -196,6 +225,7 @@ function animate() {
   } else if (keys.s.pressed && player.lastKey === "s") {
     player.velocity.y = 6.5;
   }
+
   // enemy movement
   if (keys.ArrowLeft.pressed && enemy.lastKey === "ArrowLeft") {
     enemy.velocity.x = -3.5;
@@ -217,6 +247,9 @@ function animate() {
   ) {
     // setting isAttacking to false will prevent the enemy from being hit more than once when the attack key is pressed. This is important to track and subtract the amount of health taken from the enemy.
     player.isAttacking = false;
+    enemy.health -= 10;
+    // selecting enemyHealth id, specifically style and width to deduct health from enemy's health.
+    document.querySelector("#enemyHealth").style.width = enemy.health + "%";
     console.log("player attack hit");
   }
 
@@ -229,7 +262,13 @@ function animate() {
   ) {
     // setting isAttacking to false will prevent the enemy from being hit more than once when the attack key is pressed. This is important to track and subtract the amount of health taken from the enemy.
     enemy.isAttacking = false;
+    player.health -= 10;
+    document.querySelector("#playerHealth").style.width = player.health + "%";
     console.log("enemy attack hit");
+  }
+  // end game based on health
+  if (enemy.health <= 0 || player.health <= 0) {
+    determineWinner({ player, enemy, timerId });
   }
 }
 
