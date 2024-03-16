@@ -50,7 +50,29 @@ const player = new Fighter({
   scale: 2.5,
   offset: {
     x: 215,
-    y: 180,
+    y: 155,
+  },
+  sprites: {
+    idle: {
+      imageSrc: "./img/samuraiMack/Idle.png",
+      framesMax: 8,
+    },
+    run: {
+      imageSrc: "./img/samuraiMack/Run.png",
+      framesMax: 8,
+    },
+    jump: {
+      imageSrc: "./img/samuraiMack/Jump.png",
+      framesMax: 2,
+    },
+    fall: {
+      imageSrc: "./img/samuraiMack/Fall.png",
+      framesMax: 2,
+    },
+    attack1: {
+      imageSrc: "./img/samuraiMack/Attack1.png",
+      framesMax: 6,
+    },
   },
 });
 
@@ -70,9 +92,36 @@ const enemy = new Fighter({
     y: 0,
   },
   color: "blue",
+  imageSrc: "./img/kenji/Sprites/Idle.png",
+  framesMax: 4,
+  scale: 2.5,
+  offset: {
+    x: 215,
+    y: 169,
+  },
+  sprites: {
+    idle: {
+      imageSrc: "./img/kenji/Sprites/Idle.png",
+      framesMax: 4,
+    },
+    run: {
+      imageSrc: "./img/kenji/Sprites/Run.png",
+      framesMax: 8,
+    },
+    jump: {
+      imageSrc: "./img/kenji/Sprites/Jump.png",
+      framesMax: 2,
+    },
+    fall: {
+      imageSrc: "./img/kenji/Sprites/Fall.png",
+      framesMax: 2,
+    },
+    attack1: {
+      imageSrc: "./img/kenji/Sprites/Attack1.png",
+      framesMax: 4,
+    },
+  },
 });
-
-console.log(player);
 
 const keys = {
   // player keys
@@ -88,6 +137,7 @@ const keys = {
   s: {
     pressed: false,
   },
+
   // enemy keys
   ArrowLeft: {
     pressed: false,
@@ -126,19 +176,39 @@ function animate() {
   // player movement
   if (keys.a.pressed && player.lastKey === "a") {
     player.velocity.x = -3.5;
+    player.switchSprite("run");
   } else if (keys.d.pressed && player.lastKey === "d") {
     player.velocity.x = 3.5;
+    player.switchSprite("run");
   } else if (keys.s.pressed && player.lastKey === "s") {
     player.velocity.y = 6.5;
+  } else {
+    player.switchSprite("idle");
+  }
+
+  // jumping
+  if (player.velocity.y < 0) {
+    player.switchSprite("jump");
+  } else if (player.velocity.y > 0) {
+    player.switchSprite("fall");
   }
 
   // enemy movement
   if (keys.ArrowLeft.pressed && enemy.lastKey === "ArrowLeft") {
     enemy.velocity.x = -3.5;
+    enemy.switchSprite("run");
   } else if (keys.ArrowRight.pressed && enemy.lastKey === "ArrowRight") {
     enemy.velocity.x = 3.5;
-  } else if (keys.ArrowDown.pressed && enemy.lastKey === "ArrowDown") {
-    enemy.velocity.y = 6.5;
+    enemy.switchSprite("run");
+  } else {
+    enemy.switchSprite("idle");
+  }
+
+  // jumping
+  if (enemy.velocity.y < 0) {
+    enemy.switchSprite("jump");
+  } else if (enemy.velocity.y > 0) {
+    enemy.switchSprite("fall");
   }
 
   // detect for combat collisions.
