@@ -27,6 +27,7 @@ const shop = new Sprite({
   },
   imageSrc: "./img/shop_anim.png",
   scale: 2.75,
+  framesMax: 6,
 });
 
 const player = new Fighter({
@@ -43,6 +44,13 @@ const player = new Fighter({
   offset: {
     x: 0,
     y: 0,
+  },
+  imageSrc: "./img/samuraiMack/Idle.png",
+  framesMax: 8,
+  scale: 2.5,
+  offset: {
+    x: 215,
+    y: 180,
   },
 });
 

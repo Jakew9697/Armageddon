@@ -1,33 +1,72 @@
 class Sprite {
   // wrapping arguments to remove the issue of remembering which order of arguments. The wrapped arguments are now "and/or" rather than "required". ALso, cleaner and easier to manage.
-  constructor({ position, imageSrc, scale = 1 }) {
+  constructor({
+    position,
+    imageSrc,
+    scale = 1,
+    framesMax = 1,
+    offset = { x: 0, y: 0 },
+  }) {
     this.position = position;
     this.width = 50;
     this.height = 150;
     this.image = new Image();
     this.image.src = imageSrc;
     this.scale = scale;
+    this.framesMax = framesMax;
+    this.framesCurrent = 0;
+    this.framesElapsed = 0;
+    this.framesHold = 14;
+    this.offset = offset;
   }
 
   draw() {
     c.drawImage(
       this.image,
-      this.position.x,
-      this.position.y,
-      this.image.width * this.scale,
+      this.framesCurrent * (this.image.width / this.framesMax),
+      0,
+      this.image.width / this.framesMax,
+      this.image.height,
+      this.position.x - this.offset.x,
+      this.position.y - this.offset.y,
+      (this.image.width / this.framesMax) * this.scale,
       this.image.height * this.scale
     );
   }
 
   update() {
     this.draw();
+    this.framesElapsed++;
+
+    if (this.framesElapsed % this.framesHold === 0) {
+      if (this.framesCurrent < this.framesMax - 1) {
+        this.framesCurrent++;
+      } else {
+        this.framesCurrent = 0;
+      }
+    }
   }
 }
 
-class Fighter {
+class Fighter extends Sprite {
   // wrapping arguments to remove the issue of remembering which order of arguments. The wrapped arguments are now "and/or" rather than "required". ALso, cleaner and easier to manage.
-  constructor({ position, velocity, color = "red", offset }) {
-    this.position = position;
+  constructor({
+    position,
+    velocity,
+    color = "red",
+    imageSrc,
+    scale = 1,
+    framesMax = 1,
+    offset = { x: 0, y: 0 },
+  }) {
+    super({
+      position,
+      imageSrc,
+      scale,
+      framesMax,
+      offset,
+    });
+
     // altering Sprites position
     this.velocity = velocity;
     this.width = 50;
@@ -45,21 +84,9 @@ class Fighter {
     this.color = color;
     this.isAttacking;
     this.health = 100;
-  }
-
-  draw() {
-    c.fillStyle = this.color;
-    c.fillRect(this.position.x, this.position.y, this.width, this.height);
-    // attack box
-    if (this.isAttacking) {
-      c.fillStyle = "green";
-      c.fillRect(
-        this.attackBox.position.x,
-        this.attackBox.position.y,
-        this.attackBox.width,
-        this.attackBox.height
-      );
-    }
+    this.framesCurrent = 0;
+    this.framesElapsed = 0;
+    this.framesHold = 14;
   }
 
   update() {
