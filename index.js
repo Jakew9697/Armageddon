@@ -249,6 +249,7 @@ function animate() {
 }
 
 animate();
+
 // listen for keydown event that occurs whenever you press a key on keyboard
 window.addEventListener("keydown", (event) => {
   console.log(event.key);
