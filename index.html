@@ -6,7 +6,17 @@
     }
   </style>
 </head>
-<body>
+<body
+  style="
+    display: flex;
+    background-image: url(./img/Background.png);
+    background-size: cover;
+    background-repeat: repeat-x;
+    background-position: center center;
+    overflow-y: hidden;
+    overflow-x: hidden;
+  "
+>
   <!-- canvas div -->
   <div style="position: relative; display: inline-block">
     <!-- top "nav kind" div -->
@@ -20,61 +30,77 @@
         padding: 20px;
       "
     >
-      <!-- player health -->
-      <div
-        style="
-          position: relative;
-          height: 30px;
-          width: 100%;
-          display: flex;
-          justify-content: flex-end;
-        "
-      >
-        <div style="background-color: yellow; height: 30px; width: 100%"></div>
+      <div style="min-width: 100%; display: flex">
+        <!-- player health -->
         <div
-          id="playerHealth"
           style="
-            position: absolute;
-            background: blue;
-            top: 0;
-            bottom: 0;
-            right: 0;
+            position: relative;
+            height: 30px;
             width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 35px;
+            margin-left: -15px;
           "
-        ></div>
-      </div>
-      <!-- timer -->
-      <!-- do not shrink. set to 0. -->
-      <div
-        id="timer"
-        style="
-          background-color: red;
-          height: 100px;
-          width: 100px;
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
-      >
-        10
-      </div>
-      <!-- enemy health -->
-      <div style="position: relative; height: 30px; width: 100%">
-        <div style="background-color: yellow; height: 30px"></div>
+        >
+          <div
+            style="background-color: yellow; height: 30px; width: 100%"
+          ></div>
+          <div
+            id="playerHealth"
+            style="
+              position: absolute;
+              background: blue;
+              top: 0;
+              bottom: 0;
+              right: 0;
+              width: 100%;
+            "
+          ></div>
+        </div>
+        <!-- timer -->
+        <!-- do not shrink. set to 0. -->
         <div
-          id="enemyHealth"
+          id="timer"
           style="
-            position: absolute;
-            background: blue;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            background-color: red;
+            height: 100px;
+            width: 100px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           "
-        ></div>
+        >
+          10
+        </div>
+        <!-- enemy health -->
+        <div
+          style="
+            position: relative;
+            height: 30px;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 35px;
+          "
+        >
+          <div style="background-color: yellow; height: 30px"></div>
+          <div
+            id="enemyHealth"
+            style="
+              position: absolute;
+              background: blue;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              right: 0;
+            "
+          ></div>
+        </div>
       </div>
     </div>
+
     <!-- setting win/loss/tie label inside canvas -->
     <div
       id="displaytext"

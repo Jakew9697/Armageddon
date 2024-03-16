@@ -3,22 +3,15 @@ const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 
 // 16x9 ratio for most screen sizes.
-canvas.width = 1024;
-canvas.height = 576;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 // drawing area
+c.fillStyle = "transparent";
 c.fillRect(0, 0, canvas.width, canvas.height);
 
 // ?added global gravity but now hit boxes are melting off screen when they reach the bottom of the canvas.?
 const gravity = 0.24;
-
-const background = new Sprite({
-  position: {
-    x: 0,
-    y: 0,
-  },
-  imageSrc: "./img/Background.png",
-});
 
 const shop = new Sprite({
   position: {
@@ -110,10 +103,10 @@ function animate() {
   window.requestAnimationFrame(animate);
   // *? hit box stretching problem solved but hit boxes disappear at bottom of screen now.*?
   //
-  c.fillStyle = "black";
+  // c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
   // calling background.update uses the draw function to add the background.
-  background.update();
+  // background.update();
   shop.update();
   // ? calling player.update and enemy.update made the hit boxes fall but created a stretching effect?
   player.update();
