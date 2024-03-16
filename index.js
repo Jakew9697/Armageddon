@@ -12,91 +12,24 @@ c.fillRect(0, 0, canvas.width, canvas.height);
 // ?added global gravity but now hit boxes are melting off screen when they reach the bottom of the canvas.?
 const gravity = 0.24;
 
-class Sprite {
-  // wrapping arguments to remove the issue of remembering which order of arguments. The wrapped arguments are now "and/or" rather than "required". ALso, cleaner and easier to manage.
-  constructor({ position, velocity, color = "red", offset }) {
-    this.position = position;
-    // altering Sprites position
-    this.velocity = velocity;
-    this.width = 50;
-    this.height = 150;
-    this.lastKey;
-    this.attackBox = {
-      position: {
-        x: this.position.x,
-        y: this.position.y,
-      },
-      offset: offset,
-      width: 100,
-      height: 50,
-    };
-    this.color = color;
-    this.isAttacking;
-    this.health = 100;
-  }
+const background = new Sprite({
+  position: {
+    x: 0,
+    y: 0,
+  },
+  imageSrc: "./img/Background.png",
+});
 
-  draw() {
-    c.fillStyle = this.color;
-    c.fillRect(this.position.x, this.position.y, this.width, this.height);
-    // attack box
-    if (this.isAttacking) {
-      c.fillStyle = "green";
-      c.fillRect(
-        this.attackBox.position.x,
-        this.attackBox.position.y,
-        this.attackBox.width,
-        this.attackBox.height
-      );
-    }
-  }
+const shop = new Sprite({
+  position: {
+    x: 650,
+    y: 180,
+  },
+  imageSrc: "./img/shop_anim.png",
+  scale: 2.75,
+});
 
-  update() {
-    this.draw();
-    this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
-    this.attackBox.position.y = this.position.y;
-    // in order to make sprites fall
-    // for position on y axis, add on y velocity.
-    this.position.y += this.velocity.y;
-    // for position on x axis, add on x velocity.
-    this.position.x += this.velocity.x;
-
-    // Check boundaries of canvas to ensure player/enemy cant move out of the screen.
-    if (this.position.x < 0) {
-      this.position.x = 0;
-    } else if (this.position.x + 50 > canvas.width) {
-      this.position.x = canvas.width - 50;
-    }
-    if (this.position.y < 0) {
-      this.position.y = 0;
-    } else if (this.position.y + this.height > canvas.height) {
-      this.position.y = canvas.height - this.height;
-    }
-
-    // if player jumps, gravity makes them fall down
-    if (this.position.y + this.height + this.velocity.y >= canvas.height) {
-      this.velocity.y = 0;
-      // only add gravity onto y velocity if our player and the enemy are above the canvas height. This stops them from melting below the canvas.
-    } else this.velocity.y += gravity;
-
-    this.velocity.y += gravity;
-    let nextY = this.position.y + this.velocity.y;
-    // Prevent the character from going below the canvas
-    if (nextY + this.height <= canvas.height) {
-      this.position.y = nextY;
-    } else {
-      this.position.y = canvas.height - this.height;
-    }
-  }
-
-  attack() {
-    this.isAttacking = true;
-    setTimeout(() => {
-      this.isAttacking = false;
-    }, 100);
-  }
-}
-
-const player = new Sprite({
+const player = new Fighter({
   position: {
     // place new sprite at top left of screen to start
     x: 80,
@@ -113,7 +46,7 @@ const player = new Sprite({
   },
 });
 
-const enemy = new Sprite({
+const enemy = new Fighter({
   position: {
     // place new sprite at top right of screen to start
     x: 894,
@@ -162,44 +95,6 @@ const keys = {
   },
 };
 
-function rectangularCollision({ rectangle1, rectangle2 }) {
-  return (
-    rectangle1.attackBox.position.x + rectangle1.attackBox.width >=
-      rectangle2.position.x &&
-    rectangle1.attackBox.position.x <=
-      rectangle2.position.x + rectangle2.width &&
-    rectangle1.attackBox.position.y + rectangle1.attackBox.height >=
-      rectangle2.position.y &&
-    rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height
-  );
-}
-
-function determineWinner({ player, enemy, timerId }) {
-  clearTimeout(timerId);
-  document.querySelector("#displayText").style.display = "flex";
-  if (player.health === enemy.health) {
-    document.querySelector("#displayText").innerHTML = "Tie";
-  } else if (player.health > enemy.health) {
-    document.querySelector("#displayText").innerHTML = "Player 1 Wins!";
-  } else if (player.health < enemy.health) {
-    document.querySelector("#displayText").innerHTML = "Player 2 Wins!";
-  }
-}
-
-let timer = 60;
-let timerId;
-function decreaseTimer() {
-  if (timer > 0) {
-    timerId = setTimeout(decreaseTimer, 1000);
-    timer--;
-    document.querySelector("#timer").innerHTML = timer;
-  }
-
-  if (timer === 0) {
-    determineWinner({ player, enemy });
-  }
-}
-
 decreaseTimer();
 
 function animate() {
@@ -209,6 +104,9 @@ function animate() {
   //
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
+  // calling background.update uses the draw function to add the background.
+  background.update();
+  shop.update();
   // ? calling player.update and enemy.update made the hit boxes fall but created a stretching effect?
   player.update();
   enemy.update();
@@ -292,13 +190,13 @@ window.addEventListener("keydown", (event) => {
 
     // player will jump when w is pressed
     case "w":
-      player.velocity.y = -10;
+      player.velocity.y = -7;
       break;
 
     // player will drop faster when in air when s is pressed.
     case "s":
       keys.a.pressed = true;
-      player.velocity.y = 10;
+      player.velocity.y = 7;
       break;
 
     //player will attack when the space bar is pressed
@@ -320,7 +218,7 @@ window.addEventListener("keydown", (event) => {
 
     // enemy will jump when the ArrowUp key is pressed.
     case "ArrowUp":
-      enemy.velocity.y = -10;
+      enemy.velocity.y = -7;
       break;
 
     // enemy will drop faster when in air when ArrowDown is pressed

@@ -1,6 +1,15 @@
-Project Setup 
-Create Player and Enemy (Start with hitboxes and use Sprites to create the visualization of player and arena)
-Move characters with Event Listeners
-Different Attacks
-Health bar interface
-Game Timers and Game Over
+Basic Game Mechanics:
+- Project Setup: X
+- Create Player and Enemy (Start with hitboxes and use Sprites to create the visualization of player and arena): X
+- Move characters with Event Listeners: (adjust x axis) X
+- Different Attacks: X
+- Health bar interface: X
+- Game Timers and Game Over: X
+
+Sprites and Animations:
+- Background/Map Sprite: X
+- Shop Sprite w/ animation.
+- Player Sprite.
+- Enemy Sprite.
+- Interface Design and Animation.
+- Pushing Live.
