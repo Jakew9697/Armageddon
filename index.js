@@ -22,12 +22,12 @@ const background = new Sprite({
 
 const shop = new Sprite({
   position: {
-    x: 650,
-    y: 180,
+    x: 455,
+    y: 307,
   },
-  imageSrc: "./img/shop_anim.png",
-  scale: 2.75,
-  framesMax: 6,
+  imageSrc: "./img/Salt.png",
+  scale: 1,
+  framesMax: 1,
 });
 
 const player = new Fighter({
@@ -73,6 +73,22 @@ const player = new Fighter({
       imageSrc: "./img/samuraiMack/Attack1.png",
       framesMax: 6,
     },
+    takeHit: {
+      imageSrc: "./img/samuraiMack/Take Hit - white silhouette.png",
+      framesMax: 4,
+    },
+    death: {
+      imageSrc: "./img/samuraiMack/Death.png",
+      framesMax: 6,
+    },
+  },
+  attackBox: {
+    offset: {
+      x: 100,
+      y: 50,
+    },
+    width: 157,
+    height: 50,
   },
 });
 
@@ -120,6 +136,22 @@ const enemy = new Fighter({
       imageSrc: "./img/kenji/Sprites/Attack1.png",
       framesMax: 4,
     },
+    takeHit: {
+      imageSrc: "./img/kenji/Sprites/Take hit.png",
+      framesMax: 3,
+    },
+    death: {
+      imageSrc: "./img/kenji/Sprites/Death.png",
+      framesMax: 7,
+    },
+  },
+  attackBox: {
+    offset: {
+      x: -173,
+      y: 50,
+    },
+    width: 173,
+    height: 50,
   },
 });
 
@@ -165,7 +197,8 @@ function animate() {
   // calling background.update uses the draw function to add the background.
   background.update();
   shop.update();
-  // ? calling player.update and enemy.update made the hit boxes fall but created a stretching effect?
+  c.fillStyle = "rgba(255,255,255,0.125)";
+  c.fillRect(0, 0, canvas.width, canvas.height);
   player.update();
   enemy.update();
 
@@ -175,10 +208,10 @@ function animate() {
 
   // player movement
   if (keys.a.pressed && player.lastKey === "a") {
-    player.velocity.x = -3.5;
+    player.velocity.x = -6;
     player.switchSprite("run");
   } else if (keys.d.pressed && player.lastKey === "d") {
-    player.velocity.x = 3.5;
+    player.velocity.x = 6;
     player.switchSprite("run");
   } else if (keys.s.pressed && player.lastKey === "s") {
     player.velocity.y = 6.5;
@@ -211,37 +244,53 @@ function animate() {
     enemy.switchSprite("fall");
   }
 
-  // detect for combat collisions.
+  // detect for combat collision & enemy gets hit
   // selecting left right side of players attack box NOT THE LEFT SIDE. console logging "hit" if colliding with enemy sprite.
   // is the left side of the attack box less than or equal too the right side of the enemy
+  // this is where enemy gets hit
   if (
     rectangularCollision({
       rectangle1: player,
       rectangle2: enemy,
     }) &&
-    player.isAttacking
+    player.isAttacking &&
+    player.framesCurrent === 4
   ) {
+    enemy.takeHit();
     // setting isAttacking to false will prevent the enemy from being hit more than once when the attack key is pressed. This is important to track and subtract the amount of health taken from the enemy.
     player.isAttacking = false;
-    enemy.health -= 10;
     // selecting enemyHealth id, specifically style and width to deduct health from enemy's health.
     document.querySelector("#enemyHealth").style.width = enemy.health + "%";
     console.log("player attack hit");
   }
 
+  // If player misses. player.isattacking set back to false. this is only if we are touching are opponent with our sword when we attack.
+  if (player.isAttacking && player.framesCurrent === 4) {
+    player.isAttacking = false;
+  }
+
+  // this is where the player gets hit
   if (
     rectangularCollision({
       rectangle1: enemy,
       rectangle2: player,
     }) &&
-    enemy.isAttacking
+    enemy.isAttacking &&
+    enemy.framesCurrent === 2
   ) {
+    player.takeHit();
     // setting isAttacking to false will prevent the enemy from being hit more than once when the attack key is pressed. This is important to track and subtract the amount of health taken from the enemy.
     enemy.isAttacking = false;
-    player.health -= 10;
+    // selecting playerHealth id, specifically style and width to deduct health from enemy's health.
     document.querySelector("#playerHealth").style.width = player.health + "%";
     console.log("enemy attack hit");
   }
+
+  // if enemy misses
+  if (enemy.isAttacking && enemy.framesCurrent === 2) {
+    enemy.isAttacking = false;
+  }
+
   // end game based on health
   if (enemy.health <= 0 || player.health <= 0) {
     determineWinner({ player, enemy, timerId });
@@ -252,65 +301,69 @@ animate();
 
 // listen for keydown event that occurs whenever you press a key on keyboard
 window.addEventListener("keydown", (event) => {
-  console.log(event.key);
-  switch (event.key) {
-    // move player left with "a" key on keyboard.
-    case "a":
-      keys.a.pressed = true;
-      player.lastKey = "a";
-      break;
+  if (!player.dead) {
+    switch (event.key) {
+      // move player left with "a" key on keyboard.
+      case "a":
+        keys.a.pressed = true;
+        player.lastKey = "a";
+        break;
 
-    // move player right with "d" key on keyboard.
-    case "d":
-      keys.d.pressed = true;
-      // lastKey's added to override the previous key pressed if pressing 2 keys at once. in this case if "a" were pressed ud now be moving to the right.
-      player.lastKey = "d";
-      break;
+      // move player right with "d" key on keyboard.
+      case "d":
+        keys.d.pressed = true;
+        // lastKey's added to override the previous key pressed if pressing 2 keys at once. in this case if "a" were pressed ud now be moving to the right.
+        player.lastKey = "d";
+        break;
 
-    // player will jump when w is pressed
-    case "w":
-      player.velocity.y = -7;
-      break;
+      // player will jump when w is pressed
+      case "w":
+        player.velocity.y = -8.5;
+        break;
 
-    // player will drop faster when in air when s is pressed.
-    case "s":
-      keys.a.pressed = true;
-      player.velocity.y = 7;
-      break;
+      // player will drop faster when in air when s is pressed.
+      case "s":
+        keys.a.pressed = true;
+        player.velocity.y = 7;
+        break;
 
-    //player will attack when the space bar is pressed
-    case " ":
-      player.attack();
-      break;
-
-    // enemy will move right when ArrowRight is pressed.
-    case "ArrowRight":
-      keys.ArrowRight.pressed = true;
-      enemy.lastKey = "ArrowRight";
-      break;
-
-    //enemy will move left when ArrowLeft is pressed
-    case "ArrowLeft":
-      keys.ArrowLeft.pressed = true;
-      enemy.lastKey = "ArrowLeft";
-      break;
-
-    // enemy will jump when the ArrowUp key is pressed.
-    case "ArrowUp":
-      enemy.velocity.y = -7;
-      break;
-
-    // enemy will drop faster when in air when ArrowDown is pressed
-    case "ArrowDown":
-      enemy.velocity.y = 10;
-      break;
-
-    // enemy will attack when the the num pad #5 is pressed
-    case "Clear":
-      enemy.attack();
-      break;
+      //player will attack when the space bar is pressed
+      case " ":
+        player.attack();
+        break;
+    }
   }
-  console.log(event.key);
+
+  if (!enemy.dead) {
+    switch (event.key) {
+      // enemy will move right when ArrowRight is pressed.
+      case "ArrowRight":
+        keys.ArrowRight.pressed = true;
+        enemy.lastKey = "ArrowRight";
+        break;
+
+      //enemy will move left when ArrowLeft is pressed
+      case "ArrowLeft":
+        keys.ArrowLeft.pressed = true;
+        enemy.lastKey = "ArrowLeft";
+        break;
+
+      // enemy will jump when the ArrowUp key is pressed.
+      case "ArrowUp":
+        enemy.velocity.y = -7;
+        break;
+
+      // enemy will drop faster when in air when ArrowDown is pressed
+      case "ArrowDown":
+        enemy.velocity.y = 10;
+        break;
+
+      // enemy will attack when the the num pad #5 is pressed
+      case "Clear":
+        enemy.attack();
+        break;
+    }
+  }
 });
 
 window.addEventListener("keyup", (event) => {

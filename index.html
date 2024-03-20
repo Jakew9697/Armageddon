@@ -1,106 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Armageddon</title>
-  <style>
-    /* added border box property, padding will no longer take effect when calculating the width of elements.  */
-    * {
-      box-sizing: border-box;
-    }
-  </style>
-</head>
-<body>
-  <!-- canvas div -->
-  <div style="position: relative; display: inline-block">
-    <!-- top "nav kind" div -->
-    <!-- using flex to display divs next to each other rather than the default of block which stacks them on top of each other. did this at the parent level to affect all -->
-    <div
-      style="
-        position: absolute;
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: "Press Start 2P", cursive;
+      }
+
+      body {
+        margin: 0;
+        height: 100vh;
         display: flex;
-        width: 100%;
+        justify-content: center;
         align-items: center;
-        padding: 20px;
-      "
-    >
-      <!-- player health -->
+        background-color: #000000; /* Gameboy background color */
+      }
+
+      #game-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background-color: #e8ba3dd0; /* Gameboy screen color */
+        border-radius: 40px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 1); /* Gameboy shadow */
+        overflow: hidden; /* Prevents overflow */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container">
+      <!-- red container div -->
       <div
         style="
           position: relative;
-          height: 30px;
-          width: 100%;
-          display: flex;
-          justify-content: flex-end;
+          display: inline-block;
+          border: 50px solid #363838;
+          border-radius: 20px;
+          box-shadow: 0 0 50px rgba(0, 0, 0, 1);
         "
       >
-        <div style="background-color: yellow; height: 30px; width: 100%"></div>
+        <!-- Armageddon text -->
         <div
-          id="playerHealth"
           style="
             position: absolute;
-            background: blue;
-            top: 0;
-            bottom: 0;
-            right: 0;
+            top: -33px;
             width: 100%;
+            text-align: center;
+            color: rgb(0, 0, 0);
+            font-size: 20px;
           "
-        ></div>
-      </div>
-      <!-- timer -->
-      <!-- do not shrink. set to 0. -->
-      <div
-        id="timer"
-        style="
-          background-color: red;
-          height: 100px;
-          width: 100px;
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
-      >
-        10
-      </div>
-      <!-- enemy health -->
-      <div style="position: relative; height: 30px; width: 100%">
-        <div style="background-color: yellow; height: 30px"></div>
+        >
+          Armageddon
+        </div>
+
+        <!-- smaller red container div -->
         <div
-          id="enemyHealth"
           style="
             position: absolute;
-            background: blue;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            display: flex;
+            width: 100%;
+            align-items: center;
+            padding: 20px;
           "
-        ></div>
+        >
+          <!-- player health -->
+          <div
+            style="
+              position: relative;
+              width: 100%;
+              display: flex;
+              justify-content: flex-end;
+              border-top: 4px solid rgb(0, 0, 0);
+              border-left: 4px solid rgb(0, 0, 0);
+              border-bottom: 4px solid rgb(0, 0, 0);
+            "
+          >
+            <div
+              style="
+                background-color: rgb(103, 19, 19);
+                height: 30px;
+                width: 100%;
+              "
+            ></div>
+            <div
+              id="playerHealth"
+              style="
+                position: absolute;
+                background: #007812;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                transition: width 0.2s linear;
+              "
+            ></div>
+          </div>
+
+          <!-- timer -->
+          <div
+            id="timer"
+            style="
+              background-color: black;
+              width: 100px;
+              height: 50px;
+              flex-shrink: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: rgba(255, 255, 255, 0.611);
+              border: 4px solid rgba(255, 255, 255, 0.611);
+            "
+          >
+            10
+          </div>
+          <!-- enemy health -->
+          <div
+            style="
+              position: relative;
+              width: 100%;
+              border-top: 4px solid rgb(0, 0, 0);
+              border-bottom: 4px solid rgb(0, 0, 0);
+              border-right: 4px solid rgb(0, 0, 0);
+            "
+          >
+            <div style="background-color: rgb(103, 19, 19); height: 30px"></div>
+            <div
+              id="enemyHealth"
+              style="
+                position: absolute;
+                background: #007812;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                transition: width 0.2s linear;
+              "
+            ></div>
+          </div>
+          <div></div>
+        </div>
+        <div>
+          <div
+            id="displayText"
+            style="
+              position: absolute;
+              color: white;
+              align-items: center;
+              justify-content: center;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              left: 0;
+              display: none;
+            "
+          >
+            Tie
+          </div>
+          <canvas width="800" height="600"> </canvas>
+        </div>
+        <!-- Developer name -->
+        <div
+          style="
+            position: absolute;
+            bottom: -33px;
+            width: 100%;
+            text-align: center;
+            color: rgb(0, 0, 0);
+            font-size: 12px;
+          "
+        >
+          Developed by Jake Worsham
+        </div>
+      </div>
+
+      <!-- Player controls -->
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          font-size: 14px;
+        "
+      >
+        <div
+          style="text-align: center; text-decoration: underline; flex-grow: 1.5"
+        >
+          <br />
+          <br />
+          <div>*Player 1 Controls*</div>
+          <div>
+            <br />
+            "W" = Jump <br />
+            <br />
+            "D & A" = Move left & right <br />
+            <br />
+            "Spacebar" = Attack
+          </div>
+        </div>
+        <div
+          style="text-align: center; text-decoration: underline; flex-grow: 1"
+        >
+          <br />
+          <br />
+          <div>*Player 2 Controls*</div>
+          <div>
+            <br />
+            "8" = Jump <br />
+            <br />
+            "4 & 6" = Move left & right <br />
+            <br />
+            "5" = Attack <br />
+            <br />
+            !Player 2 must be controlled with the numpad! <br />
+          </div>
+        </div>
       </div>
     </div>
-    <!-- setting win/loss/tie label inside canvas -->
-    <div
-      id="displaytext"
-      style="
-        position: absolute;
-        color: white;
-        align-items: center;
-        justify-content: center;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        display: none;
-      "
-    >
-      Tie
-    </div>
-    <canvas style="border-radius: 5px"></canvas>
-  </div>
 
-  <script src="js/utils.js"></script>
-  <script src="js/classes.js"></script>
-  <script src="index.js"></script>
-</body>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"
+      integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="js/utils.js"></script>
+    <script src="js/classes.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

@@ -9,7 +9,7 @@ Basic Game Mechanics:
 Sprites and Animations:
 - Background/Map Sprite: X
 - Shop Sprite w/ animation. X
-- Player Sprite.
-- Enemy Sprite.
-- Interface Design and Animation.
+- Player Sprite. x
+- Enemy Sprite. x
+- Interface Design and Animation. x
 - Pushing Live. 
