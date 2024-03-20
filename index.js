@@ -197,7 +197,8 @@ function animate() {
   // calling background.update uses the draw function to add the background.
   background.update();
   shop.update();
-  c.fillStyle = "rgba(255,255,255,0.125)";
+  // contrasting the backgroun to see characters better
+  c.fillStyle = "rgba(255,255,255,0.15)";
   c.fillRect(0, 0, canvas.width, canvas.height);
   player.update();
   enemy.update();
