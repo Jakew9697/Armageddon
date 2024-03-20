@@ -23,7 +23,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #000000; /* Gameboy background color */
+        background-color: #363838; /* Gameboy background color */
       }
 
       #game-container {
@@ -34,9 +34,9 @@
         justify-content: center;
         width: 100%;
         height: 100%;
-        background-color: #ae8c25b6; /* Gameboy screen color */
-        border-radius: 40px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 1); /* Gameboy shadow */
+        background-color: #aa61219e; /* Gameboy screen color */
+        border-radius: 120px;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 1); /* Gameboy shadow */
         overflow: hidden; /* Prevents overflow */
       }
     </style>
@@ -47,6 +47,10 @@
       <div style="position: absolute; left: 70px; top: 40%; text-align: center; color: black; font-size: 14px;">
         <div>-Player 1-</div>
         <div>Attacks slower but <br> moves faster and <br> jumps higher</div>
+      </div>
+
+      <div style="position: absolute; left: 70px; top: 8%; text-align: center; color: black; font-size: 14px;">
+        <div>*Press CTRL + R to <br> reset the game*</div>
       </div>
     
       <!-- Right character description -->
@@ -63,7 +67,7 @@
           display: inline-block;
           border: 50px solid #363838;
           border-radius: 20px;
-          box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+          box-shadow: 0 0 25px rgba(0, 0, 0, 1);
         "
       >
         <!-- Armageddon text -->
